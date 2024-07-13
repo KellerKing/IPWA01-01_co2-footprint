@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Svelte + Vite
 
 This template should help get you started developing with Svelte in Vite.
@@ -45,3 +46,6 @@ If you have state that's important to retain within a component, consider creati
 import { writable } from 'svelte/store'
 export default writable(0)
 ```
+=======
+# IPWA01-01_co2-footprint
+>>>>>>> 1fa1e8ac803ee4d4de04c1c5b9883c5465de0e64
