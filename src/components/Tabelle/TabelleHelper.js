@@ -44,11 +44,11 @@ export function getFilteredDaten(
 
     let result = [];
 
-    getFilteredViewModels(viewData, filterLandString, "Land").forEach(element => {
+    getFilteredViewModels(viewData, filterLandString, "land").forEach(element => {
         result.push(element);
     });
 
-    getFilteredViewModels(viewData, filterUnternehmenString, "Unternehmen").forEach(element => {
+    getFilteredViewModels(viewData, filterUnternehmenString, "unternehmen").forEach(element => {
         result.push(element);
     });
 
@@ -66,7 +66,7 @@ export function getUeberschriftSpalte(property) {
         case "UNTERNEHMEN":
             return "Unternehmen";
         case "CO2VERBRAUCH":
-            return "CO2-Emissionen in Tonnen";
+            return "Co2-Emissionen*";
         case "BRANCHE":
             return "Branche";
         default:

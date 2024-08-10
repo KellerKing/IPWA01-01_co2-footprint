@@ -1,6 +1,6 @@
 export class TabelleViewModel {
-    unternehmen;
     land;
+    unternehmen;
     branche;
     co2Verbrauch;
     isVisible = true;

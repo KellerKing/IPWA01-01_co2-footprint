@@ -1,6 +1,13 @@
 <script>
     import { onMount } from "svelte";
-    import {createViewModels, getSortedViewModels, getFilteredDaten, getUeberschriftSpalte } from "./TabelleHelper.js"
+    import {
+        createViewModels,
+        getSortedViewModels,
+        getFilteredDaten,
+        getUeberschriftSpalte,
+    } from "./TabelleHelper.js";
+
+    
     export let data;
 
     let currentSortierung = { Property: "", IsAufsteigend: false };
@@ -9,14 +16,13 @@
 
     onMount(() => {
         if (data?.length <= 0) return;
-        
+
         viewModels = createViewModels(data);
 
         sortByHeader("Land");
     });
 
     $: viewModels = getFilteredDaten(sucheLand, sucheUnternehmen, viewModels);
-
 
     function updateCurrentSortierung(nameProperty) {
         //Erster Aufruf kommt vom onMount event.
@@ -34,7 +40,11 @@
 
     function sortByHeader(nameProperty) {
         updateCurrentSortierung(nameProperty);
-        viewModels = getSortedViewModels(viewModels, currentSortierung.IsAufsteigend, currentSortierung.Property);
+        viewModels = getSortedViewModels(
+            viewModels,
+            currentSortierung.IsAufsteigend,
+            currentSortierung.Property,
+        );
     }
 
     function getSortierungssymbol(kopfzeile) {
@@ -46,17 +56,30 @@
     }
 
     function getKlassenTableRow(index) {
-        let result = "";
+        let result = "hover:bg-slate-200";
 
         result += index % 2 == 0 ? " bg-gray-100" : " bg-white";
         return result;
+    }
+
+    function handleInput(event) {
+        //Sanitisation. 
+        let text = event.target.value.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+        if (event.target.id === "filterLand") {
+            sucheLand = text.trim();
+            return;
+        }
+        sucheUnternehmen = text.trim();
     }
 </script>
 
 {#if viewModels?.length > 0}
     <div>
         <div class="pt-5 rounded max-w-md md:max-w-4xl px-5">
-            <div class="grid grid-rows-1 md:grid-rows-1 grid-cols-1 md:grid-cols-2 gap-3">
+            <div
+                class="grid grid-rows-1 md:grid-rows-1 grid-cols-1 md:grid-cols-2 gap-3"
+            >
                 <div class="mb-3">
                     <label for="filterLand" class="font-medium"
                         >Filter nach Land</label
@@ -67,7 +90,7 @@
                         maxlength="30"
                         id="filterLand"
                         class="border rounded w-full py-2 px-3 text-gray-700 leading-tight bg-gray-200 focus:bg-white"
-                        bind:value={sucheLand}
+                        on:input={handleInput}
                     />
                 </div>
                 <div class="mb-6">
@@ -76,43 +99,44 @@
                     >
                     <input
                         type="text"
-                        placeholder="z.b SAP"
+                        placeholder="z.b Volkswagen"
                         maxlength="30"
                         id="filterUnternehmen"
                         class="border rounded w-full py-2 px-3 text-gray-700 leading-tight bg-gray-200 focus:bg-white"
-                        bind:value={sucheUnternehmen}
+                        on:input={handleInput}
                     />
                 </div>
             </div>
         </div>
-        <div class="w-full pt-4 bg-green-100 justify-center flex">
+        <div
+            class="pt-4 md:mx-auto h-96 md:h-full overflow-y-auto md:max-w-6xl"
+        >
             <table
-                class="shadow-xl bg-gray-100 md:w-5/6 lg:w-2/3 rounded-xl border-separate border-1 overflow-scroll transform-gpu scale-80 md:scale-100"
+                class="shadow-xl bg-gray-100 rounded-xl border-separate border-1
+                transform-gpu w-full"
             >
-                <thead class="bg-slate-700 text-white shadow-sm">
+                <thead class="bg-slate-700 text-white shadow-sm text-sm">
                     {#each Object.keys(viewModels[0]) as kopfzeile}
                         {#if getUeberschriftSpalte(kopfzeile)}
                             <th
                                 id={kopfzeile}
                                 on:click={() => sortByHeader(kopfzeile)}
-                                class="p-3"
+                                class="p-2"
                             >
-                                {getUeberschriftSpalte(kopfzeile)}
+                                {getUeberschriftSpalte(kopfzeile)} <br>
                                 {@html getSortierungssymbol(kopfzeile)}
                             </th>
                         {/if}
                     {/each}
                 </thead>
                 <tbody class="border-2">
-                    {#each Object.values(viewModels) as datensatz, i}
-                        <tr class="hover:bg-slate-200 {getKlassenTableRow(i)}">
-                            {#if datensatz.IsVisible}
-                                {#each Object.values(datensatz) as property}
-                                    {#if typeof property != "boolean"}
-                                        <td>{property}</td>
-                                    {/if}
-                                {/each}
-                            {/if}
+                    {#each viewModels.filter((v) => v.IsVisible) as datensatz, i}
+                        <tr class="{getKlassenTableRow(i)}">
+                            {#each Object.values(datensatz) as property}
+                                {#if typeof property != "boolean"}
+                                    <td>{property}</td>
+                                {/if}
+                            {/each}
                         </tr>
                     {/each}
                 </tbody>
@@ -120,6 +144,3 @@
         </div>
     </div>
 {/if}
-
-<style>
-</style>
