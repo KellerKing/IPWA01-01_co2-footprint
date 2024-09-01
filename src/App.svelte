@@ -3,13 +3,41 @@
   import viteLogo from '/vite.svg'
   import Counter from './lib/Counter.svelte'
   import Header from './components/Header.svelte'
+  import Footer from './components/Footer.svelte'
+  import Tabelle from './components/Tabelle/Tabelle.svelte'
+  import {datenTabelle} from './lib/tabellendaten.js'
+  import { getContext } from "svelte";
+  import Popup from './components/Popup.svelte'
+
+  let popupIsVisible = false;
+  let popupTitel = "";
+  let popupInhalt = "";
+
+  function handleFooterPopup(event) {
+    popupTitel = event.detail.Titel;
+    popupInhalt = event.detail.Inhalt;
+    popupToggleIsVisible();
+  }
+
+  function popupToggleIsVisible() {
+        popupIsVisible = !popupIsVisible;
+    }
+
+    function onPopupClosed() {
+      popupTitel = "";
+      popupInhalt = "";
+      popupToggleIsVisible();
+    }
 </script>
 
 <body>
   <Header/>
-  
-  <main >
+  <Tabelle data = {datenTabelle}/>
+  <main>
   </main>
+  <Footer on:popupAngefragt={handleFooterPopup}/>
+  <Popup show = {popupIsVisible} close={onPopupClosed} titel = {popupTitel} content = {popupInhalt}/>
+
 </body>
 
 
