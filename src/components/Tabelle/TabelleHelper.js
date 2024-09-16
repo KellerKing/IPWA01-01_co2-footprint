@@ -90,9 +90,6 @@ function getFilteredViewModels(viewData, filterString, key) {
 function getSorterString(isAufsteigend, nameProperty) {
     let reihenfolge = isAufsteigend ? 1 : -1;
 
-    //Fall 1: Absteigend
-    //Wenn a kleiner b ist, dann muss b vor a. Also -1 * -1 = 1. Dann wird b nach vorne/oben geschoben.
-    //Wenn a größer b ist, dann muss a...
     let sorter = (a, b) =>
         a[nameProperty] < b[nameProperty]
             ? -1 * reihenfolge
@@ -106,9 +103,6 @@ function getSorterString(isAufsteigend, nameProperty) {
 function getSorterNumber(isAufsteigend, nameProperty) {
     let reihenfolge = isAufsteigend ? 1 : -1;
 
-    //Fall 1: Absteigend
-    //Wenn a kleiner b ist, dann muss b vor a. Also -1 * -1 = 1. Dann wird b nach vorne/oben geschoben.
-    //Wenn a größer b ist, dann muss a...
     let sorter = (a, b) =>
         parseFloat(a[nameProperty]) < parseFloat(b[nameProperty])
             ? -1 * reihenfolge
