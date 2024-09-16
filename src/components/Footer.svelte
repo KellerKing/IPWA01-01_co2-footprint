@@ -1,48 +1,35 @@
 <script>
     import { createEventDispatcher } from "svelte";
-    import Popup from "./Popup.svelte";
+
+    export let footerContent;
 
     const dispatch = createEventDispatcher();
 
-    let showModal = false;
-
-    function toggleModal() {
-        showModal = !showModal;
-    }
-
-    function onImpressumClicked() {
-        //toggleModal();
-
+    function onFooterItemClicked(button) {
+        let id = parseInt(button.id);
+        let element = footerContent.find(x => x.Id == id);
+        if (element == null) return;
+        
         dispatch("popupAngefragt", {
-            Titel: "Impressum",
-            Inhalt: "Das ist der Impressum Inhalt"
-        });
-    }
-
-    function onDatenschutzClicked() {
-        //toggleModal();
-
-        dispatch("popupAngefragt", {
-            Titel: "Datenschutz",
-            Inhalt: "Das ist der Datenschutzinhalt"
+            Titel: element.Titel,
+            Inhalt: element.Content,
         });
     }
 </script>
 
-<!--class="justify-center inset-x-0 h-16 bg-green-200 flex flex-row fixed bottom-0 left-0 w-full"-->
-<div class="h-20 bg-green-200 fixed bottom-0 left-0 w-full">
-    <div class="flex justify-center gap-4 p-4">
-        <div class="border-2">
-            <button type="button" on:click={onImpressumClicked} class = "mx-2">
-                Impressum
-            </button>
-        </div>
-        <div class="">
-            <button type="button" on:click={onDatenschutzClicked}>
-                Datenschutz
-            </button>
-        </div>
+<div class="h-16 bg-gray-800 bg-opacity-95 fixed bottom-0 left-0 w-full">
+    <div class="flex justify-center gap-4 p-4 text-lg text-white">
+        {#each footerContent as item}
+            <div class="">
+                <button
+                    type="button"
+                    id={item.Id}
+                    on:click={(event) => onFooterItemClicked(event.target)}
+                    class="hover:text-xl transition-all duration-500 hover:text-green-600"
+                >
+                    {@html item.Text}
+                </button>
+            </div>
+        {/each}
     </div>
 </div>
-
-<Popup show = {showModal} close={toggleModal} />
