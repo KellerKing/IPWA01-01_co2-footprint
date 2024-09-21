@@ -12,6 +12,7 @@
   let popupIsVisible = false;
   let popupTitel = "";
   let popupInhalt = "";
+  let direction = setDefaultLeserichtung();
 
   function handleFooterPopup(event) {
     popupTitel = event.detail.Titel;
@@ -61,21 +62,36 @@
       ];
     }
 
+    function onLeserichtungChanged(event) {
+      direction = event.detail.direction;
+    }
+
+    function setDefaultLeserichtung() {
+      let defaultDirection = "ltr";
+      try {
+        let userLang = navigator.language; 
+        let locale = new Intl.Locale(userLang);
+        return locale.textInfo.direction || defaultDirection;
+      }
+      catch {
+        return defaultDirection;
+      }
+    }
+
 </script>
 
 <body>
-  <Header/>
-  <Tabelle data = {datenTabelle}/>
-  <main>
-  </main>
-  <Footer on:popupAngefragt={handleFooterPopup} footerContent={createFooterContent()}/>
-  <Popup show = {popupIsVisible} close={onPopupClosed} titel = {popupTitel} content = {popupInhalt}/>
+  <Header direction={direction} on:leserichtungChanged = {onLeserichtungChanged}/>
+  <Tabelle data = {datenTabelle} direction = {direction}/>
+  <Footer on:popupAngefragt={handleFooterPopup} footerContent={createFooterContent()} />
+  <Popup show = {popupIsVisible} close={onPopupClosed} titel = {popupTitel} content = {popupInhalt} direction= {direction}/>
 
 </body>
 
 
 
 <!-- 
+https://centus.com/blog/svelte-localization
  <main>
   <div>
     <a href="https://vitejs.dev" target="_blank" rel="noreferrer">

@@ -9,6 +9,7 @@
 
     
     export let data;
+    export let direction;
 
     let currentSortierung = { Property: "", IsAufsteigend: false };
     let sucheLand;
@@ -75,7 +76,7 @@
 </script>
 
 {#if viewModels?.length > 0}
-    <div>
+    <div dir="{direction}">
         <div class="pt-5 rounded max-w-md md:max-w-4xl px-5">
             <div
                 class="grid grid-rows-1 md:grid-rows-1 grid-cols-1 md:grid-cols-2 gap-3"
