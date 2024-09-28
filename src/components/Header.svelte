@@ -2,19 +2,14 @@
   import src from "../assets/logo_iu.svg";
   import { createEventDispatcher } from "svelte";
   import { onMount } from "svelte";
+  import {link} from 'svelte-spa-router';
 
   export let direction;
-
+  export let items;
   const dispatch = createEventDispatcher();
 
   let isNavigationVisible = false;
   let isRightToLeft = false;
-
-  let items = [
-    { Id: "1", Text: "Startseite", Link: "#" },
-    { Id: "2", Text: "Fußabdruck im vergleich", Link: "#" },
-    { Id: "3", Text: "Über die Seite", Link: "#" },
-  ];
 
   onMount(() => {
     isRightToLeft =
@@ -31,7 +26,7 @@
 
 <header>
   <nav>
-    <div class="flex items-center justify-between mx-auto p-4">
+    <div class="flex flex-wrap items-center justify-between mx-auto p-4">
       <img
         {src}
         class="h-12 flex items-center space-x-3 rtl:space-x-reverse"
@@ -70,7 +65,7 @@
           {#each items as currentItem}
             <li>
               <a
-                href={currentItem.Link}
+                href={currentItem.Link} use:link
                 id={currentItem.Id}
                 class="block py-1 px-2 mb-1 md:text-black text-gray-100 md:p-0 hover:text-green-600 hover:underline"
               >

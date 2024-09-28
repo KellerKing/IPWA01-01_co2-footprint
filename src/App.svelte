@@ -1,34 +1,12 @@
 <script>
-  import svelteLogo from "./assets/svelte.svg";
-  import viteLogo from "/vite.svg";
-  import Counter from "./lib/Counter.svelte";
-  import Tabelle from "./components/Tabelle/Tabelle.svelte";
-  import { datenTabelle } from "./lib/tabellendaten.js";
   import Layout from "./components/+layout.svelte";
 
   import Router from "svelte-spa-router";
   import routes from "./routes";
+  import { navbarElements } from "./routes";
 
-  let popupIsVisible = false;
-  let popupTitel = "";
-  let popupInhalt = "";
   let direction = setDefaultLeserichtung();
 
-  function handleFooterPopup(event) {
-    popupTitel = event.detail.Titel;
-    popupInhalt = event.detail.Inhalt;
-    popupToggleIsVisible();
-  }
-
-  function popupToggleIsVisible() {
-    popupIsVisible = !popupIsVisible;
-  }
-
-  function onPopupClosed() {
-    popupTitel = "";
-    popupInhalt = "";
-    popupToggleIsVisible();
-  }
 
   function createFooterContent() {
     return [
@@ -78,76 +56,31 @@
       return defaultDirection;
     }
   }
+
+  function createHeaderItemsFromRoutes() {
+    let result = [];
+
+    navbarElements.forEach(element => {
+      let text = "";
+    
+      if (element.name.toLowerCase() === "startseite") text = "Startseite";
+      else if (element.name.toLowerCase() === "co2vergleich") text = "Fußabdruck im vergleich";
+      else if (element.name.toLowerCase() === "about") text = "Über die Seite";
+      else text = element.name;
+      
+      let item = {
+        Id: element.id,
+        Text: text,
+        Link: element.link
+      };
+        result.push(item);
+    });
+
+    return result.sort(x => x.Id);
+  }
+  
 </script>
 
-<Layout footerContent={createFooterContent()} {direction}>
+<Layout footerContent={createFooterContent()} {direction} navbarElements = {createHeaderItemsFromRoutes()}>
   <Router {routes} />
 </Layout>
-<!--<Header direction={direction} on:leserichtungChanged = {onLeserichtungChanged}/>
-  <Tabelle data = {datenTabelle} direction = {direction}/>
-  <Footer on:popupAngefragt={handleFooterPopup} footerContent={createFooterContent()} />
-  <Popup show = {popupIsVisible} close={onPopupClosed} titel = {popupTitel} content = {popupInhalt} direction= {direction}/>
-  -->
-
-<!-- 
-https://centus.com/blog/svelte-localization
- <main>
-  <div>
-    <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-      <img src={viteLogo} class="logo" alt="Vite Logo" />
-    </a>
-    <a href="https://svelte.dev" target="_blank" rel="noreferrer">
-      <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
-    </a>
-  </div>
-
-Angaben gemäß § 5 DDG
-
-Max Muster
-Musterweg
-12345 Musterstadt
-Vertreten durch:
-Max Muster
-Kontakt:
-Telefon: 01234-789456
-Fax: 1234-56789
-E-Mail: max@muster.de
-
-Umsatzsteuer-ID:
-Umsatzsteuer-Identifikationsnummer gemäß §27a Umsatzsteuergesetz: Musterustid.
-
-Wirtschafts-ID:
-Musterwirtschaftsid
-
-  <h1>Vite + Svelte</h1>
-
-  <div class="card">
-    <Counter />
-  </div>
-
-  <p>
-    Check out <a href="https://github.com/sveltejs/kit#readme" target="_blank" rel="noreferrer">SvelteKit</a>, the official Svelte app framework powered by Vite!
-  </p>
-
-  <p class="read-the-docs">
-    Click on the Vite and Svelte logos to learn more
-  </p>
-</main>
-
-<style>
-  .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: filter 300ms;
-  }
-  .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
-  }
-  .logo.svelte:hover {
-    filter: drop-shadow(0 0 2em #ff3e00aa);
-  }
-  .read-the-docs {
-    color: #888;
-  }
-</style> -->

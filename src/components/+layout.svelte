@@ -6,6 +6,7 @@
 
 	export let footerContent;
 	export let direction
+	export let navbarElements;
 
 	let popupIsVisible = false;
 	let popupTitel = "";
@@ -32,7 +33,7 @@
     }
 
 </script>
-<Header direction={direction} on:leserichtungChanged = {onLeserichtungChanged}/>
+<Header direction={direction} on:leserichtungChanged = {onLeserichtungChanged} items = {navbarElements}/>
 <slot></slot>
 <Footer on:popupAngefragt={handleFooterPopup} {footerContent}/>
 <Popup show = {popupIsVisible} close={onPopupClosed} titel = {popupTitel} content = {popupInhalt} direction= {direction}/>
