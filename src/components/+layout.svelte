@@ -3,9 +3,8 @@
 	import Popup from "./Popup.svelte";
 	import Header from "./Header.svelte";
 
-
 	export let footerContent;
-	export let direction
+	export let direction;
 	export let navbarElements;
 
 	let popupIsVisible = false;
@@ -19,22 +18,35 @@
 	}
 
 	function popupToggleIsVisible() {
-        popupIsVisible = !popupIsVisible;
-    }
+		popupIsVisible = !popupIsVisible;
+	}
 
-    function onPopupClosed() {
-      popupTitel = "";
-      popupInhalt = "";
-      popupToggleIsVisible();
-    }
-	
+	function onPopupClosed() {
+		popupTitel = "";
+		popupInhalt = "";
+		popupToggleIsVisible();
+	}
+
 	function onLeserichtungChanged(event) {
-      direction = event.detail.direction;
-    }
-
+		direction = event.detail.direction;
+	}
 </script>
-<Header direction={direction} on:leserichtungChanged = {onLeserichtungChanged} items = {navbarElements}/>
-<slot></slot>
-<Footer on:popupAngefragt={handleFooterPopup} {footerContent}/>
-<Popup show = {popupIsVisible} close={onPopupClosed} titel = {popupTitel} content = {popupInhalt} direction= {direction}/>
 
+<Header
+	{direction}
+	on:leserichtungChanged={onLeserichtungChanged}
+	items={navbarElements}
+/>
+<div class="pt-4 px-2">
+	<slot></slot>
+</div>
+<div class="pt-20">
+	<Footer on:popupAngefragt={handleFooterPopup} {footerContent} />
+</div>
+<Popup
+	show={popupIsVisible}
+	close={onPopupClosed}
+	titel={popupTitel}
+	content={popupInhalt}
+	{direction}
+/>

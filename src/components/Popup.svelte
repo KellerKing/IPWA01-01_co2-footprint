@@ -7,7 +7,7 @@
 </script>
 
   {#if show}
-	<div class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center md:min-w-72 min-w-40 max-w-full px-10" dir={direction}>
+	<div class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center md:min-w-72 min-w-40 max-w-full px-10 overflow-y-auto" dir={direction}>
 	  <div class="bg-white p-4 rounded shadow-lg">
 		<h1 class="text-lg pb-4">{@html titel}</h1>
 		<p>{@html content}</p>

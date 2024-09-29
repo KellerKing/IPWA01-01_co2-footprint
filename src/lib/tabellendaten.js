@@ -1,4 +1,4 @@
-export let datenTabelle = [
+const datenTabelle = [
     {
         "Unternehmen": "Walmart",
         "Land": "USA",
@@ -599,4 +599,6 @@ export let datenTabelle = [
         "Branche": "Mischkonzern",
         "Co2InTonnen": 196.0903200024624
     }
-]
+];
+
+export default datenTabelle;

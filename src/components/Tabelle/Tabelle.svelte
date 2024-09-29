@@ -7,7 +7,7 @@
         getUeberschriftSpalte,
     } from "./TabelleHelper.js";
 
-    
+    //Daten aus tabellendaten.js
     export let data;
     export let direction;
 
