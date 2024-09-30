@@ -131,7 +131,7 @@
                     {/each}
                 </thead>
                 <tbody class="border-2">
-                    {#each viewModels.filter((v) => v.IsVisible) as datensatz, i}
+                    {#each viewModels.filter((v) => v.isVisible) as datensatz, i}
                         <tr class="{getKlassenTableRow(i)}">
                             {#each Object.values(datensatz) as property}
                                 {#if typeof property != "boolean"}
