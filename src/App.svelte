@@ -6,7 +6,7 @@
   import { navbarElements } from "./routes";
 
   let direction = setDefaultLeserichtung();
-
+  //https://github.com/jorgegorka/svelte-router/blob/master/README.md
 
   function createFooterContent() {
     return [

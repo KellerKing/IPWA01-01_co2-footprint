@@ -2,6 +2,7 @@
 	import Footer from "./Footer.svelte";
 	import Popup from "./Popup.svelte";
 	import Header from "./Header.svelte";
+	import { leserichtung } from "../store";
 
 	export let footerContent;
 	export let direction;
@@ -10,6 +11,7 @@
 	let popupIsVisible = false;
 	let popupTitel = "";
 	let popupInhalt = "";
+
 
 	function handleFooterPopup(event) {
 		popupTitel = event.detail.Titel;
@@ -28,7 +30,7 @@
 	}
 
 	function onLeserichtungChanged(event) {
-		direction = event.detail.direction;
+		leserichtung.set(event.detail.direction);
 	}
 </script>
 
