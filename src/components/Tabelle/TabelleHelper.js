@@ -33,27 +33,22 @@ export function getFilteredDaten(
 
     if (!filterLandString && !filterUnternehmenString) {
         viewData.forEach((element) => {
-            element.IsVisible = true;
+            element.isVisible = true;
         });
         return viewData;
     }
 
     viewData.forEach((element) => {
-        element.IsVisible = false;
+        element.isVisible = false;
     });
 
-    let result = [];
-
-    getFilteredViewModels(viewData, filterLandString, "land").forEach(element => {
-        result.push(element);
-    });
-
-    getFilteredViewModels(viewData, filterUnternehmenString, "unternehmen").forEach(element => {
-        result.push(element);
-    });
+    //Da Objekte by Ref sind, wird eine Veränderung ein einem Objekt aus result auch in viewData geschehen.
+    //Das ist nicht leserlich und gehört refactored. Für das aktuelle Projekt reicht es jedoch 
+    let result = getFilteredViewModels(viewData, filterLandString, "land");
+    result = getFilteredViewModels(result, filterUnternehmenString, "unternehmen");
 
     result.forEach((element) => {
-        element.IsVisible = true;
+        element.isVisible = true;
     });
 
     return viewData;
@@ -75,9 +70,9 @@ export function getUeberschriftSpalte(property) {
 }
 
 function getFilteredViewModels(viewData, filterString, key) {
-    let result = []
-    if (!filterString) return result;
-
+    if (!filterString) return viewData;
+    
+    let result = [];
     let gefunden = viewData.filter((datensatz) =>
         datensatz[key].toUpperCase().includes(
             filterString.toUpperCase(),
@@ -100,6 +95,7 @@ function getSorterString(isAufsteigend, nameProperty) {
     return sorter;
 }
 
+//Weil der String "91" größer als "101" ist, muss eine Zahl vorher als Foat gewandelt werden.
 function getSorterNumber(isAufsteigend, nameProperty) {
     let reihenfolge = isAufsteigend ? 1 : -1;
 
