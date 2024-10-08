@@ -1,5 +1,4 @@
 ﻿using IPWA01_01.Backend.DataAccess.Contracts;
-using IPWA01_01.Backend.DataAccess.Contracts.Contracts;
 using IPWA01_01.Backend.DataAccess.DatabaseConnection;
 using IPWA01_01.Backend.DataAccess.Interface;
 

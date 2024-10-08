@@ -6,5 +6,9 @@
         public int UnternehmenId { get; set; }
         public int LandId { get; set; }
         public double Co2Verbrauch { get; set; }
+
+        public string Unternehmen { get; set; }
+        public string Land { get; set; }
+        public string Branche { get; set; }
     }
 }

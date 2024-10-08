@@ -1,6 +1,6 @@
 ﻿//Pfad zur Sqlite Datenbank. Tabellen sind bereits erstellet.
 using IPWA01_01.Backend.DataAccess;
-using IPWA01_01.Backend.DataAccess.Contracts.Contracts;
+using IPWA01_01.Backend.DataAccess.Contracts;
 
 var databaseController = Bootstrapper.CreateDatabaseAccessControllerSqlite(new DatabaseConfiguration
 {
