@@ -3,6 +3,7 @@ using IPWA01_01.Backend.DataAccess.Interface;
 using IPWA01_01.Backend.DataAccess.Model;
 using Microsoft.Data.Sqlite;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace IPWA01_01.Backend.DataAccess.DatabaseConnection
 {
@@ -26,7 +27,9 @@ namespace IPWA01_01.Backend.DataAccess.DatabaseConnection
 
         public IEnumerable<Co2VerbrauchModel> GetCo2Verbrauch()
         {
-            var sql = $"Select * FROM {m_TabelleCo2Verbrauch}";
+            var sql = "Select a.Id, b.Name as Land, c.Name as Unternehmen, c.Branche, a.Co2Verbrauch FROM Co2Verbrauch As a " +
+                      "Inner Join Land As b ON b.Id = a.LandId " +
+                      "Inner Join Unternehmen As c On c.Id = a.UnternehmenID;"; 
 
             using var connection = new SqliteConnection(m_ConnectionString);
             var result = connection.Query<Co2VerbrauchModel>(sql);

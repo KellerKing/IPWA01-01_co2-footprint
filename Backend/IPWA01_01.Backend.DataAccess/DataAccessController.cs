@@ -1,5 +1,4 @@
 ﻿using IPWA01_01.Backend.DataAccess.Contracts;
-using IPWA01_01.Backend.DataAccess.Contracts.Contracts;
 using IPWA01_01.Backend.DataAccess.Interface;
 
 namespace IPWA01_01.Backend.DataAccess
@@ -15,9 +14,13 @@ namespace IPWA01_01.Backend.DataAccess
             throw new NotImplementedException();
         }
 
+        //https://stackoverflow.com/questions/68980778/config-connection-string-in-net-core-6
+        //https://pmichaels.net/2021/11/28/dependency-injection-in-minimal-apis-in-net-6/
         public IEnumerable<Co2VerbrauchDto> GetCo2Verbrauch()
         {
-            throw new NotImplementedException();
+            var models = m_DatabaseConnection.GetCo2Verbrauch();
+            var result = models.Select(x => DtoCreator.CreateCo2VerbrauchDto(x)).ToList();
+            return result;
         }
 
         public LandDto GetLandByName(string name)
