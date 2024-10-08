@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>IPWA01_01.Datenbankbewirtschaftung</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Daten\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IPWA01_01.Backend.DataAccess.Contracts\IPWA01_01.Backend.DataAccess.Contracts.csproj" />
+    <ProjectReference Include="..\IPWA01_01.Backend.DataAccess\IPWA01_01.Backend.DataAccess.csproj" />
+  </ItemGroup>
+
+</Project>
