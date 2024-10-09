@@ -2,8 +2,6 @@
 using IPWA01_01.Backend.DataAccess.Interface;
 using IPWA01_01.Backend.DataAccess.Model;
 using Microsoft.Data.Sqlite;
-using System.Collections.Generic;
-using System.Xml.Linq;
 
 namespace IPWA01_01.Backend.DataAccess.DatabaseConnection
 {
@@ -22,7 +20,24 @@ namespace IPWA01_01.Backend.DataAccess.DatabaseConnection
 
         public IEnumerable<Co2VerbrauchModel> GetCo2VerbauchGefiltert(string filterLand, string filterUnternehmen)
         {
-            throw new NotImplementedException();
+            var sql = "Select a.Id, b.Name as Land, c.Name as Unternehmen, c.Branche, a.Co2Verbrauch FROM Co2Verbrauch As a " +
+                      "Inner Join Land As b ON b.Id = a.LandId " +
+                      "Inner Join Unternehmen As c On c.Id = a.UnternehmenID";
+
+            if (!string.IsNullOrEmpty(filterLand)) sql += " WHERE b.Name Like @filterLand";
+            
+            if (!string.IsNullOrEmpty(filterUnternehmen))
+            {
+                if (!string.IsNullOrEmpty(filterLand)) sql += " And c.Name Like @filterUnternehmen";
+                else sql += " Where c.Name Like @filterUnternehmen";
+            }
+
+            sql += ";";
+
+            using var connection = new SqliteConnection(m_ConnectionString);
+            var result = connection.Query<Co2VerbrauchModel>(sql, new { filterLand = $"%{filterLand}%", filterUnternehmen = $"%{filterUnternehmen}%" });
+
+            return result;
         }
 
         public IEnumerable<Co2VerbrauchModel> GetCo2Verbrauch()

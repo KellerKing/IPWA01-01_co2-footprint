@@ -11,15 +11,15 @@ namespace IPWA01_01.Backend.DataAccess
 
         public IEnumerable<Co2VerbrauchDto> GetCo2VerbauchGefiltert(string filterLand, string filterUnternehmen)
         {
-            throw new NotImplementedException();
+            var models = m_DatabaseConnection.GetCo2VerbauchGefiltert(filterLand, filterUnternehmen);
+            var result = models.Select(DtoCreator.CreateCo2VerbrauchDto).ToList();
+            return result;
         }
 
-        //https://stackoverflow.com/questions/68980778/config-connection-string-in-net-core-6
-        //https://pmichaels.net/2021/11/28/dependency-injection-in-minimal-apis-in-net-6/
         public IEnumerable<Co2VerbrauchDto> GetCo2Verbrauch()
         {
             var models = m_DatabaseConnection.GetCo2Verbrauch();
-            var result = models.Select(x => DtoCreator.CreateCo2VerbrauchDto(x)).ToList();
+            var result = models.Select(DtoCreator.CreateCo2VerbrauchDto).ToList();
             return result;
         }
 
