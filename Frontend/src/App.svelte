@@ -1,12 +1,10 @@
 <script>
   import Layout from "./components/+layout.svelte";
-
   import Router from "svelte-spa-router";
   import routes from "./routes";
   import { navbarElements } from "./routes";
 
   let direction = setDefaultLeserichtung();
-  //https://github.com/jorgegorka/svelte-router/blob/master/README.md
 
   function createFooterContent() {
     return [
@@ -39,10 +37,6 @@
           "Da dies keine richtige Webseite ist, wird auf einen ordentlichen Datenschutzeintrag verzichtet.</p>",
       },
     ];
-  }
-
-  function onLeserichtungChanged(event) {
-    direction = event.detail.direction;
   }
 
   function setDefaultLeserichtung() {

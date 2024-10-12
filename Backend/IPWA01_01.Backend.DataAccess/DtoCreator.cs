@@ -11,7 +11,7 @@ namespace IPWA01_01.Backend.DataAccess
             {
                 Id = model.Id,
                 Branche = model.Branche,
-                Co2Verbauch = model.Co2Verbrauch,
+                Co2Verbrauch = model.Co2Verbrauch,
                 Land = model.Land,
                 Unternehmen = model.Unternehmen
             };

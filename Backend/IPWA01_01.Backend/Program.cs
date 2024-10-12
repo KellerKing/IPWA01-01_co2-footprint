@@ -9,7 +9,21 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton(Bootstrapper.CreateDatabaseAccessControllerSqlite
     (new DatabaseConfiguration { Location = builder.Configuration.GetConnectionString("SqlitePath") }));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("MyAllowedOrigins",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173");
+        });
+});
+
+
 var app = builder.Build();
+app.UseCors(x => x
+ .AllowAnyOrigin()
+ .AllowAnyMethod()
+ .AllowAnyHeader());
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -18,12 +32,19 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//Beispiele
-//https://stackoverflow.com/questions/37365277/how-to-specify-the-port-an-asp-net-core-application-is-hosted-on
-//https://medium.com/codenx/minimal-apis-in-net-8-a-simplified-approach-to-build-services-eb50df56819f
 
+app.MapGet("/IsErreichbar", () =>
+{
+    return TypedResults.Ok(new {message = "OK"});
+})
+    .WithName("IsErreichbar")
+    .WithOpenApi(x => new Microsoft.OpenApi.Models.OpenApiOperation(x)
+    {
+        Summary = "Gibt immer true zurück, da nur Sichgerstellt werden soll, ob eine Verbindung möglich ist.",
+        Description = "Gibt immer true zurück, da nur Sichgerstellt werden soll, ob eine Verbindung möglich ist."
+    });
 
-app.MapGet("/Co2Verbrauch", async (IDataAccessController dataAccessController) =>
+app.MapGet("/GetCo2Verbrauch", (IDataAccessController dataAccessController) =>
 {
     return TypedResults.Ok(dataAccessController.GetCo2Verbrauch());
 })
@@ -36,7 +57,7 @@ app.MapGet("/Co2Verbrauch", async (IDataAccessController dataAccessController) =
 
 
 app.MapGet("/GetCo2Verbrauch/land/{land}/unternehmen/{unternehmen}",
-    async (IDataAccessController dataAccessController, string land, string unternehmen) =>
+    (IDataAccessController dataAccessController, string land, string unternehmen) =>
     {
         return TypedResults.Ok(dataAccessController.GetCo2VerbauchGefiltert(land, unternehmen));
     })
@@ -49,11 +70,11 @@ app.MapGet("/GetCo2Verbrauch/land/{land}/unternehmen/{unternehmen}",
 
 
 app.MapGet("/GetCo2Verbrauch/land/{land}",
-    async (IDataAccessController dataAccessController, string land) =>
+    (IDataAccessController dataAccessController, string land) =>
     {
         return TypedResults.Ok(dataAccessController.GetCo2VerbauchGefiltert(land, string.Empty));
     })
-    .WithName("GetCo2VerbauchGefiltert")
+    .WithName("GetCo2VerbauchGefiltertNurLand")
     .WithOpenApi(x => new Microsoft.OpenApi.Models.OpenApiOperation(x)
     {
         Summary = "Liefert alle Einträge für den Co2 Verbrauch, in denen die Texte für Land vorhanden sind.",
@@ -62,11 +83,11 @@ app.MapGet("/GetCo2Verbrauch/land/{land}",
 
 
 app.MapGet("/GetCo2Verbrauch/unternehmen/{unternehmen}",
-    async (IDataAccessController dataAccessController, string unternehmen) =>
+    (IDataAccessController dataAccessController, string unternehmen) =>
     {
         return TypedResults.Ok(dataAccessController.GetCo2VerbauchGefiltert(string.Empty, unternehmen));
     })
-    .WithName("GetCo2VerbauchGefiltert")
+    .WithName("GetCo2VerbauchGefiltertNurUnternehmen")
     .WithOpenApi(x => new Microsoft.OpenApi.Models.OpenApiOperation(x)
     {
         Summary = "Liefert alle Einträge für den Co2 Verbrauch, in denen die Texte für Unternehmen vorhanden sind.",
