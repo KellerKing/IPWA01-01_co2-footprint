@@ -1,29 +1,34 @@
 <script>
     import { onMount } from "svelte";
     import {
-        createViewModels,
         getSortedViewModels,
-        getFilteredDaten,
         getUeberschriftSpalte,
     } from "./TabelleHelper.js";
 
-    //Daten aus tabellendaten.js
-    export let data;
+    import { createEventDispatcher } from "svelte";
+
     export let direction;
 
+    let updateDaten = function setData(viewModelsInput) {
+        viewModels = getSortedViewModels(
+            viewModelsInput,
+            currentSortierung.IsAufsteigend,
+            currentSortierung.Property,
+        );
+    };
+
+    const dispatch = createEventDispatcher();
     let currentSortierung = { Property: "", IsAufsteigend: false };
+
     let sucheLand;
     let sucheUnternehmen;
+    let viewModels = [];
 
     onMount(() => {
-        if (data?.length <= 0) return;
-
-        viewModels = createViewModels(data);
-
+        fordereDatenAn();
+        if (viewModels?.length <= 0) return;
         sortByHeader("Land");
     });
-
-    $: viewModels = getFilteredDaten(sucheLand, sucheUnternehmen, viewModels);
 
     function updateCurrentSortierung(nameProperty) {
         //Erster Aufruf kommt vom onMount event.
@@ -64,51 +69,60 @@
     }
 
     function handleInput(event) {
-        //Sanitisation. 
-        let text = event.target.value.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        let text = event.target.value;
 
         if (event.target.id === "filterLand") {
             sucheLand = text.trim();
-            return;
+        } else {
+            sucheUnternehmen = text.trim();
         }
-        sucheUnternehmen = text.trim();
+
+        fordereDatenAn();
+    }
+
+    function fordereDatenAn() {
+        dispatch("FilterTabelle", {
+            filterLand: sucheLand,
+            filterUnternehmen: sucheUnternehmen,
+            updateMethode: updateDaten,
+        });
     }
 </script>
 
-{#if viewModels?.length > 0}
-    <div dir="{direction}">
-        <div class="pt-5 rounded max-w-md md:max-w-4xl px-5">
-            <div
-                class="grid grid-rows-1 md:grid-rows-1 grid-cols-1 md:grid-cols-2 gap-3"
-            >
-                <div class="mb-3">
-                    <label for="filterLand" class="font-medium"
-                        >Filter nach Land</label
-                    >
-                    <input
-                        type="text"
-                        placeholder="z.b Deutschland"
-                        maxlength="30"
-                        id="filterLand"
-                        class="border rounded w-full py-2 px-3 text-gray-700 leading-tight bg-gray-200 focus:bg-white"
-                        on:input={handleInput}
-                    />
-                </div>
-                <div class="mb-6">
-                    <label for="filterUnternehmen" class="font-medium"
-                        >Filter nach Unternehmen</label
-                    >
-                    <input
-                        type="text"
-                        placeholder="z.b Volkswagen"
-                        maxlength="30"
-                        id="filterUnternehmen"
-                        class="border rounded w-full py-2 px-3 text-gray-700 leading-tight bg-gray-200 focus:bg-white"
-                        on:input={handleInput}
-                    />
-                </div>
+<div dir={direction}>
+    <div class="pt-5 rounded max-w-md md:max-w-4xl px-5">
+        <div
+            class="grid grid-rows-1 md:grid-rows-1 grid-cols-1 md:grid-cols-2 gap-3"
+        >
+            <div class="mb-3">
+                <label for="filterLand" class="font-medium"
+                    >Filter nach Land</label
+                >
+                <input
+                    type="text"
+                    placeholder="z.b Deutschland"
+                    maxlength="30"
+                    id="filterLand"
+                    class="border rounded w-full py-2 px-3 text-gray-700 leading-tight bg-gray-200 focus:bg-white"
+                    on:input={handleInput}
+                />
+            </div>
+            <div class="mb-6">
+                <label for="filterUnternehmen" class="font-medium"
+                    >Filter nach Unternehmen</label
+                >
+                <input
+                    type="text"
+                    placeholder="z.b Volkswagen"
+                    maxlength="30"
+                    id="filterUnternehmen"
+                    class="border rounded w-full py-2 px-3 text-gray-700 leading-tight bg-gray-200 focus:bg-white"
+                    on:input={handleInput}
+                />
             </div>
         </div>
+    </div>
+    {#if viewModels?.length > 0}
         <div
             class="pt-4 md:mx-auto h-96 md:h-full overflow-y-auto md:max-w-6xl"
         >
@@ -124,7 +138,7 @@
                                 on:click={() => sortByHeader(kopfzeile)}
                                 class="p-2"
                             >
-                                {getUeberschriftSpalte(kopfzeile)} <br>
+                                {getUeberschriftSpalte(kopfzeile)} <br />
                                 {@html getSortierungssymbol(kopfzeile)}
                             </th>
                         {/if}
@@ -132,7 +146,7 @@
                 </thead>
                 <tbody class="border-2">
                     {#each viewModels.filter((v) => v.isVisible) as datensatz, i}
-                        <tr class="{getKlassenTableRow(i)}">
+                        <tr class={getKlassenTableRow(i)}>
                             {#each Object.values(datensatz) as property}
                                 {#if typeof property != "boolean"}
                                     <td>{property}</td>
@@ -143,5 +157,5 @@
                 </tbody>
             </table>
         </div>
-    </div>
-{/if}
+    {/if}
+</div>
